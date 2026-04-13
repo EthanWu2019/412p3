@@ -62,8 +62,10 @@ def question3e():
 def question8():
     answerEpsilon = None
     answerLearningRate = None
-    return answerEpsilon, answerLearningRate
+    # return answerEpsilon, answerLearningRate
     # If not possible, return 'NOT POSSIBLE'
+    # It is not possible to reliably learn the optimal policy in just 50 iterations
+    return 'NOT POSSIBLE'
 
 if __name__ == '__main__':
     print('Answers to analysis questions:')

@@ -101,7 +101,15 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        if not legalActions:
+            return None
+            
+        # Explore: pick a random action with probability epsilon
+        if util.flipCoin(self.epsilon):
+            action = random.choice(legalActions)
+        # Exploit: pick the best action
+        else:
+            action = self.getPolicy(state)
 
         return action
 
@@ -179,14 +187,28 @@ class ApproximateQAgent(PacmanQAgent):
           where * is the dotProduct operator
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        qValue = 0.0
+        
+        # Q(s,a) = sum_i (w_i * f_i)
+        for feature, value in features.items():
+            qValue += self.weights[feature] * value
+            
+        return qValue
 
     def update(self, state, action, nextState, reward):
         """
            Should update your weights based on transition
         """
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        features = self.featExtractor.getFeatures(state, action)
+        
+        # difference = (r + gamma * max_a' Q(s', a')) - Q(s, a)
+        difference = (reward + self.discount * self.getValue(nextState)) - self.getQValue(state, action)
+        
+        # w_i = w_i + alpha * difference * f_i
+        for feature, value in features.items():
+            self.weights[feature] += self.alpha * difference * value
 
     def final(self, state):
         "Called at the end of each game."
